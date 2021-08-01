@@ -11,9 +11,9 @@ export default function Welcome(props) {
                     </InertiaLink>
                 ) : (
                     <>
-                        <a href={route('login')} className="text-sm text-gray-700 underline">
+                        <InertiaLink href={route('login')} className="text-sm text-gray-700 underline">
                             Log in
-                        </a>
+                        </InertiaLink>
 
                         <InertiaLink href={route('register')} className="ml-4 text-sm text-gray-700 underline">
                             Register
