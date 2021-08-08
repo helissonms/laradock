@@ -1,52 +1,54 @@
-import Button from '@/Components/Button';
 import Guest from '@/Layouts/Guest';
-import Input from '@/Components/Input';
 import React from 'react';
-import ValidationErrors from '@/Components/ValidationErrors';
 import { useForm } from '@inertiajs/inertia-react';
+import { Alert, Button, Card, Form } from 'react-bootstrap';
 
 export default function ForgotPassword({ status }) {
-    const { data, setData, post, processing, errors } = useForm({
-        email: '',
-    });
+  const { data, setData, post, processing, errors } = useForm({
+    email: '',
+  });
 
-    const onHandleChange = (event) => {
-        setData(event.target.name, event.target.value);
-    };
+  const onHandleChange = (event) => {
+    setData(event.target.name, event.target.value);
+  };
 
-    const submit = (e) => {
-        e.preventDefault();
+  const submit = (e) => {
+    e.preventDefault();
 
-        post(route('password.email'));
-    };
+    post(route('password.email'));
+  };
 
-    return (
-        <Guest>
-            <div className="mb-4 text-sm text-gray-500 leading-normal">
-                Forgot your password? No problem. Just let us know your email address and we will email you a password
-                reset link that will allow you to choose a new one.
-            </div>
+  return (
+    <Guest>
+      <Card>
+        <Card.Header className="card-header">Redefinir senha</Card.Header>
+        <Card.Body>
+          {status && (
+            <Alert variant="success">{status}</Alert>
+          )}
 
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+          <Form onSubmit={submit}>
+          <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                className={`${errors.email ? 'is-invalid' : ''}`}
+                value={data.email}
+                required
+                autoComplete="email"
+                onChange={onHandleChange} />
+              {errors.email && (
+                <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-            <ValidationErrors errors={errors} />
-
-            <form onSubmit={submit}>
-                <Input
-                    type="text"
-                    name="email"
-                    value={data.email}
-                    className="mt-1 block w-full"
-                    isFocused={true}
-                    handleChange={onHandleChange}
-                />
-
-                <div className="flex items-center justify-end mt-4">
-                    <Button className="ml-4" processing={processing}>
-                        Email Password Reset Link
-                    </Button>
-                </div>
-            </form>
-        </Guest>
-    );
+            <Button type="submit" variant="primary" disabled={processing} className="float-end">
+              Redefinir senha
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Guest>
+  );
 }

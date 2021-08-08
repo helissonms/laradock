@@ -1,45 +1,35 @@
-import Button from '@/Components/Button';
 import Guest from '@/Layouts/Guest';
 import React from 'react';
-import { InertiaLink } from '@inertiajs/inertia-react';
 import { useForm } from '@inertiajs/inertia-react';
+import { Button, Form } from 'react-bootstrap';
 
 export default function VerifyEmail({ status }) {
-    const { post, processing } = useForm();
+  const { post, processing } = useForm();
 
-    const submit = (e) => {
-        e.preventDefault();
+  const submit = (e) => {
+    e.preventDefault();
 
-        post(route('verification.send'));
-    };
+    post(route('verification.send'));
+  };
 
-    return (
-        <Guest>
-            <div className="mb-4 text-sm text-gray-600">
-                Thanks for signing up! Before getting started, could you verify your email address by clicking on the
-                link we just emailed to you? If you didn't receive the email, we will gladly send you another.
-            </div>
+  return (
+    <Guest>
+      <Card>
+        <Card.Header className="card-header">Verifique seu endereço de e-mail</Card.Header>
+        <Card.Body>
+          {status === 'verification-link-sent' && (
+            <Alert variant="success">
+              Um novo link de verificação foi enviado para seu endereço de e-mail.
+            </Alert>
+          )}
 
-            {status === 'verification-link-sent' && (
-                <div className="mb-4 font-medium text-sm text-green-600">
-                    A new verification link has been sent to the email address you provided during registration.
-                </div>
-            )}
-
-            <form onSubmit={submit}>
-                <div className="mt-4 flex items-center justify-between">
-                    <Button processing={processing}>Resend Verification Email</Button>
-
-                    <InertiaLink
-                        href={route('logout')}
-                        method="post"
-                        as="button"
-                        className="underline text-sm text-gray-600 hover:text-gray-900"
-                    >
-                        Log Out
-                    </InertiaLink>
-                </div>
-            </form>
-        </Guest>
-    );
+          Antes de prosseguir, verifique seu e-mail em busca de um link de verificação.
+          Se você não recebeu o e-mail,
+          <Form className="d-inline" onSubmit={submit}>
+            <Button variant="link" disabled={processing}>clique aqui para solicitar outro</Button>.
+          </Form>
+        </Card.Body>
+      </Card>
+    </Guest>
+  );
 }

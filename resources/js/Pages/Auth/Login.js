@@ -1,93 +1,98 @@
-import Button from '@/Components/Button';
-import Checkbox from '@/Components/Checkbox';
 import Guest from '@/Layouts/Guest';
-import Input from '@/Components/Input';
-import Label from '@/Components/Label';
 import React, { useEffect } from 'react';
-import ValidationErrors from '@/Components/ValidationErrors';
-import { InertiaLink } from '@inertiajs/inertia-react';
-import { useForm } from '@inertiajs/inertia-react';
+import { InertiaLink, useForm } from '@inertiajs/inertia-react';
+import { Alert, Button, Card, Col, Form, Row } from 'react-bootstrap';
 
-export default function Login({ status, canResetPassword }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
-        remember: '',
-    });
+export default function Login({ status, canResetPassword, canRegister }) {
+  const { data, setData, post, processing, errors, reset } = useForm({
+    email: '',
+    password: '',
+    remember: true,
+  });
 
-    useEffect(() => {
-        return () => {
-            reset('password');
-        };
-    }, []);
+  console.log(data);
 
-    const onHandleChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
+  useEffect(() => {
+    return () => {
+      reset('password');
     };
+  }, []);
 
-    const submit = (e) => {
-        e.preventDefault();
+  const onHandleChange = (event) => {
+    setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
+  };
 
-        post(route('login'));
-    };
+  const submit = (e) => {
+    e.preventDefault();
 
-    return (
-        <Guest>
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+    post(route('login'));
+  };
 
-            <ValidationErrors errors={errors} />
+  return (
+    <Guest canRegister>
+      <Card>
+        <Card.Header className="card-header">Entrar</Card.Header>
+        <Card.Body>
+          {status && (
+            <Alert variant="success">{status}</Alert>
+          )}
 
-            <form onSubmit={submit}>
-                <div>
-                    <Label forInput="email" value="Email" />
+          <Form onSubmit={submit}>
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                className={`${errors.email ? 'is-invalid' : ''}`}
+                value={data.email}
+                required
+                autoComplete="email"
+                onChange={onHandleChange} />
+              {errors.email && (
+                <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-                    <Input
-                        type="text"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                    />
-                </div>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Senha</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                className={`${errors.password ? 'is-invalid' : ''}`}
+                value={data.password}
+                required
+                autoComplete="current-password"
+                onChange={onHandleChange} />
+              {errors.password && (
+                <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-                <div className="mt-4">
-                    <Label forInput="password" value="Password" />
+            <Form.Group className="mb-3" controlId="remember">
+              <Form.Check
+                type="checkbox"
+                name="remember"
+                label="Lembre-se de mim"
+                value={data.remember}
+                defaultChecked
+                onChange={onHandleChange} />
+            </Form.Group>
 
-                    <Input
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        handleChange={onHandleChange}
-                    />
-                </div>
-
-                <div className="block mt-4">
-                    <label className="flex items-center">
-                        <Checkbox name="remember" value={data.remember} handleChange={onHandleChange} />
-
-                        <span className="ml-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    {canResetPassword && (
-                        <InertiaLink
-                            href={route('password.request')}
-                            className="underline text-sm text-gray-600 hover:text-gray-900"
-                        >
-                            Forgot your password?
-                        </InertiaLink>
-                    )}
-
-                    <Button className="ml-4" processing={processing}>
-                        Log in
-                    </Button>
-                </div>
-            </form>
-        </Guest>
-    );
+            <Row>
+              <Col>
+                {canResetPassword && (
+                    <InertiaLink href={route('password.request')} className="btn btn-link float-start">
+                      Esqueceu a senha?
+                    </InertiaLink>
+                  )}
+              </Col>
+              <Col>
+                  <Button type="submit" variant="primary" className="float-end" disabled={processing}>Entrar</Button>
+              </Col>
+            </Row>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Guest>
+  );
 }

@@ -1,60 +1,58 @@
-import Button from '@/Components/Button';
 import Guest from '@/Layouts/Guest';
-import Input from '@/Components/Input';
-import Label from '@/Components/Label';
 import React, { useEffect } from 'react';
-import ValidationErrors from '@/Components/ValidationErrors';
 import { useForm } from '@inertiajs/inertia-react';
+import { Button, Card, Form } from 'react-bootstrap';
 
 export default function ConfirmPassword() {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        password: '',
-    });
+  const { data, setData, post, processing, errors, reset } = useForm({
+    password: '',
+  });
 
-    useEffect(() => {
-        return () => {
-            reset('password');
-        };
-    }, []);
-
-    const onHandleChange = (event) => {
-        setData(event.target.name, event.target.value);
+  useEffect(() => {
+    return () => {
+      reset('password');
     };
+  }, []);
 
-    const submit = (e) => {
-        e.preventDefault();
+  const onHandleChange = (event) => {
+    setData(event.target.name, event.target.value);
+  };
 
-        post(route('password.confirm'));
-    };
+  const submit = (e) => {
+    e.preventDefault();
 
-    return (
-        <Guest>
-            <div className="mb-4 text-sm text-gray-600">
-                This is a secure area of the application. Please confirm your password before continuing.
-            </div>
+    post(route('password.confirm'));
+  };
 
-            <ValidationErrors errors={errors} />
+  return (
+    <Guest>
+      <Card>
+        <Card.Header className="card-header">Confirmar senha</Card.Header>
+        <Card.Body>
+          Por favor, confirme sua senha antes de continuar.
 
-            <form onSubmit={submit}>
-                <div className="mt-4">
-                    <Label forInput="password" value="Password" />
+          <Form onSubmit={submit}>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Senha</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                className={`${errors.password ? 'is-invalid' : ''}`}
+                value={data.password}
+                required
+                autoComplete="current-password"
+                onChange={onHandleChange} />
+              {errors.password && (
+                <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-                    <Input
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                    />
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    <Button className="ml-4" processing={processing}>
-                        Confirm
-                    </Button>
-                </div>
-            </form>
-        </Guest>
-    );
+            <Button type="submit" variant="primary" disabled={processing} className="float-end">
+              Confirmar senha
+            </Button>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Guest>
+  );
 }

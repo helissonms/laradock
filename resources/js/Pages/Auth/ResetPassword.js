@@ -1,86 +1,88 @@
-import Button from '@/Components/Button';
 import Guest from '@/Layouts/Guest';
-import Input from '@/Components/Input';
-import Label from '@/Components/Label';
 import React, { useEffect } from 'react';
-import ValidationErrors from '@/Components/ValidationErrors';
 import { useForm } from '@inertiajs/inertia-react';
+import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 
 export default function ResetPassword({ token, email }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        token: token,
-        email: email,
-        password: '',
-        password_confirmation: '',
-    });
+  const { data, setData, post, processing, errors, reset } = useForm({
+    token: token,
+    email: email,
+    password: '',
+    password_confirmation: '',
+  });
 
-    useEffect(() => {
-        return () => {
-            reset('password', 'password_confirmation');
-        };
-    }, []);
-
-    const onHandleChange = (event) => {
-        setData(event.target.name, event.target.value);
+  useEffect(() => {
+    return () => {
+      reset('password', 'password_confirmation');
     };
+  }, []);
 
-    const submit = (e) => {
-        e.preventDefault();
+  const onHandleChange = (event) => {
+    setData(event.target.name, event.target.value);
+  };
 
-        post(route('password.update'));
-    };
+  const submit = (e) => {
+    e.preventDefault();
 
-    return (
-        <Guest>
-            <ValidationErrors errors={errors} />
+    post(route('password.update'));
+  };
 
-            <form onSubmit={submit}>
-                <div>
-                    <Label forInput="email" value="Email" />
+  return (
+    <Guest>
+      <Card>
+        <Card.Header className="card-header">Redefinir senha</Card.Header>
+        <Card.Body>
+          <Form onSubmit={submit}>
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control
+                type="email"
+                name="email"
+                className={`${errors.email ? 'is-invalid' : ''}`}
+                value={data.email}
+                required
+                autoComplete="email"
+                onChange={onHandleChange} />
+              {errors.email && (
+                <Form.Control.Feedback type="invalid">{errors.email}</Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-                    <Input
-                        type="email"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        handleChange={onHandleChange}
-                    />
-                </div>
+            <Form.Group className="mb-3" controlId="password">
+              <Form.Label>Senha</Form.Label>
+              <Form.Control
+                type="password"
+                name="password"
+                className={`${errors.password ? 'is-invalid' : ''}`}
+                value={data.password}
+                required
+                autoComplete="current-password"
+                onChange={onHandleChange} />
+              {errors.password && (
+                <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
+              )}
+            </Form.Group>
 
-                <div className="mt-4">
-                    <Label forInput="password" value="Password" />
+            <Form.Group className="mb-3" controlId="password_confirmation">
+              <Form.Label>Confirmar Senha</Form.Label>
+              <Form.Control
+                type="password"
+                name="password_confirmation"
+                value={data.password_confirmation}
+                required
+                onChange={onHandleChange} />
+            </Form.Group>
 
-                    <Input
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                    />
-                </div>
-
-                <div className="mt-4">
-                    <Label forInput="password_confirmation" value="Confirm Password" />
-
-                    <Input
-                        type="password"
-                        name="password_confirmation"
-                        value={data.password_confirmation}
-                        className="mt-1 block w-full"
-                        autoComplete="new-password"
-                        handleChange={onHandleChange}
-                    />
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
-                    <Button className="ml-4" processing={processing}>
-                        Reset Password
-                    </Button>
-                </div>
-            </form>
-        </Guest>
-    );
+            <Row>
+              <Col>
+                  <Button type="submit" variant="primary" className="float-end" disabled={processing}>
+                    Redefinir senha
+                  </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Guest>
+  );
 }

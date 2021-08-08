@@ -1,19 +1,41 @@
-import ApplicationLogo from '../Components/ApplicationLogo';
-import React from 'react';
 import { InertiaLink } from '@inertiajs/inertia-react';
+import React from 'react';
+import { Col, Container, Nav, Navbar, Row } from 'react-bootstrap';
 
-export default function Guest({ children }) {
-    return (
-        <div className="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <InertiaLink href="/">
-                    <ApplicationLogo className="w-20 h-20 fill-current text-gray-500" />
-                </InertiaLink>
-            </div>
+export default function Guest({ canRegister, children }) {
 
-            <div className="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
-                {children}
-            </div>
-        </div>
-    );
+  return (
+    <>
+      <Navbar bg="white" expand="md" variant="light" className="shadow-sm">
+        <Container>
+          <InertiaLink href="/">
+          </InertiaLink>
+
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="me-auto"></Nav>
+
+            <Nav>
+              <InertiaLink href={route('login')} className="nav-link">Entrar</InertiaLink>
+
+              {canRegister && (
+                <InertiaLink href={route('register')} className="nav-link">Registrar</InertiaLink>
+              )}
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      <main className="py-4">
+        <Container>
+          <Row className="">
+            <Col lg={{span: 6, offset: 3}} md={{span: 6, offset: 3}} >
+              {children}
+            </Col>
+          </Row>
+        </Container>
+      </main>
+    </>
+  );
 }
