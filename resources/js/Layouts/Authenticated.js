@@ -1,6 +1,7 @@
 import { InertiaLink } from '@inertiajs/inertia-react';
 import React from 'react';
 import { Col, Container, Nav, Navbar, NavDropdown, Row } from 'react-bootstrap';
+import ApplicationLogo from '@/Components/ApplicationLogo';
 
 export default function Authenticated({ auth, children }) {
 
@@ -8,7 +9,8 @@ export default function Authenticated({ auth, children }) {
     <>
       <Navbar bg="white" expand="md" variant="light" className="shadow-sm">
         <Container>
-          <InertiaLink href="/">
+          <InertiaLink href={route('dashboard')} className="navbar-brand">
+            <ApplicationLogo size='lg' />
           </InertiaLink>
 
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
