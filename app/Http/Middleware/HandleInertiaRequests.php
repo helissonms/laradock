@@ -39,6 +39,18 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'canRegister' => Route::has('register'),
+            'flash' => $this->getFlashData(),
         ]);
+    }
+
+    protected function getFlashData()
+    {
+        $data = [];
+
+        foreach (session('_flash.new') as $key) {
+            $data[$key] = session($key);
+        }
+
+        return $data;
     }
 }
